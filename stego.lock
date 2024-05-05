@@ -1,0 +1,21 @@
+[build]
+
+source = "main.c"
+
+bin = "s4c_gui_demo"
+
+makevers = "0.1.0"
+
+automakevers = "0.1.0"
+
+tests = "tests"
+
+[tests]
+
+testsdir = "ok"
+
+errortestsdir = "errors"
+
+[versions]
+
+"0.0.1" = "First commit"
