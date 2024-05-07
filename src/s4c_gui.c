@@ -355,7 +355,7 @@ void use_clean_TextField(TextField txt_field)
 
 static const int TOGGLE_MENU_DEFAULT_QUIT_KEY = KEY_F(1);
 
-static void cycle_state(Toggle *toggle)
+static void cycle_toggle_state(Toggle *toggle)
 {
     toggle->state.ts_state.current_state = (toggle->state.ts_state.current_state + 1) % toggle->state.ts_state.num_states;
 }
@@ -524,7 +524,7 @@ void handle_ToggleMenu(ToggleMenu toggle_menu)
             if (current_item(nc_menu)) {
                 Toggle *toggle = (Toggle *)item_userptr(current_item(nc_menu));
                 if (toggle && toggle->type == MULTI_STATE_TOGGLE && !toggle->locked) {
-                    cycle_state(toggle);
+                    cycle_toggle_state(toggle);
                     if (try_display_state) draw_ToggleMenu_states(state_win, toggle_menu);
                 }
             }
@@ -534,7 +534,7 @@ void handle_ToggleMenu(ToggleMenu toggle_menu)
             if (current_item(nc_menu)) {
                 Toggle *toggle = (Toggle *)item_userptr(current_item(nc_menu));
                 if (toggle && toggle->type == MULTI_STATE_TOGGLE && !toggle->locked) {
-                    cycle_state(toggle);
+                    cycle_toggle_state(toggle);
                     if (try_display_state) draw_ToggleMenu_states(state_win, toggle_menu);
                 }
             }
