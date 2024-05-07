@@ -21,7 +21,7 @@
 
 #define S4C_GUI_MAJOR 0 /**< Represents current major release.*/
 #define S4C_GUI_MINOR 0 /**< Represents current minor release.*/
-#define S4C_GUI_PATCH 2 /**< Represents current patch release.*/
+#define S4C_GUI_PATCH 3 /**< Represents current patch release.*/
 
 /* Defines current API version number from KLS_MAJOR, KLS_MINOR and KLS_PATCH.
  */
@@ -32,7 +32,7 @@ static const int S4C_GUI_API_VERSION_INT =
 /**
  * Defines current API version string.
  */
-static const char S4C_GUI_API_VERSION_STRING[] = "0.0.2"; /**< Represents current version with MAJOR.MINOR.PATCH format.*/
+static const char S4C_GUI_API_VERSION_STRING[] = "0.0.3"; /**< Represents current version with MAJOR.MINOR.PATCH format.*/
 
 /**
  * Returns current s4c_gui version as a string.
@@ -59,8 +59,6 @@ extern s4c_gui_calloc_func* s4c_gui_calloc;
 #include <string.h>
 #include <limits.h>
 
-#define TEXTFIELD_MAX_LENGTH 6
-
 typedef struct TextField_s *TextField;
 
 typedef void(TextField_Full_Handler)(TextField);
@@ -78,13 +76,13 @@ bool lint_TextField_equals_cstr(TextField txt, const void* cstr);
 bool lint_TextField_whitelist(TextField txt, const void* whitelist);
 bool lint_TextField_digits_only(TextField txt);
 bool lint_TextField_chars_only(TextField txt);
-TextField new_TextField_(TextField_Full_Handler* full_buffer_handler, TextField_Linter** linters, size_t num_linters, const void** linter_args, int height, int width, int start_x, int start_y, s4c_gui_malloc_func* malloc_func, s4c_gui_calloc_func* calloc_func, s4c_gui_free_func* free_func);
-TextField new_TextField_centered_(TextField_Full_Handler* full_buffer_handler, TextField_Linter** linters, size_t num_linters, const void** linter_args, int height, int width, int bound_x, int bound_y, s4c_gui_malloc_func* malloc_func, s4c_gui_calloc_func* calloc_func, s4c_gui_free_func* free_func);
+TextField new_TextField_(TextField_Full_Handler* full_buffer_handler, TextField_Linter** linters, size_t num_linters, const void** linter_args, size_t max_size, int height, int width, int start_x, int start_y, s4c_gui_malloc_func* malloc_func, s4c_gui_calloc_func* calloc_func, s4c_gui_free_func* free_func);
+TextField new_TextField_centered_(TextField_Full_Handler* full_buffer_handler, TextField_Linter** linters, size_t num_linters, const void** linter_args, size_t max_size, int height, int width, int bound_x, int bound_y, s4c_gui_malloc_func* malloc_func, s4c_gui_calloc_func* calloc_func, s4c_gui_free_func* free_func);
 bool lint_TextField(TextField txt_field);
-TextField new_TextField(int height, int width, int start_x, int start_y);
-TextField new_TextField_centered(int height, int width, int bound_x, int bound_y);
-TextField new_TextField_linted(TextField_Linter** linters, size_t num_linters, const void** linter_args, int height, int width, int start_x, int start_y);
-TextField new_TextField_alloc(int height, int width, int start_x, int start_y, s4c_gui_malloc_func* malloc_func, s4c_gui_calloc_func* calloc_func, s4c_gui_free_func* free_func);
+TextField new_TextField(size_t max_size, int height, int width, int start_x, int start_y);
+TextField new_TextField_centered(size_t max_size, int height, int width, int bound_x, int bound_y);
+TextField new_TextField_linted(TextField_Linter** linters, size_t num_linters, const void** linter_args, size_t max_size, int height, int width, int start_x, int start_y);
+TextField new_TextField_alloc(size_t max_size, int height, int width, int start_x, int start_y, s4c_gui_malloc_func* malloc_func, s4c_gui_calloc_func* calloc_func, s4c_gui_free_func* free_func);
 void draw_TextField(TextField txt);
 void clear_TextField(TextField txt);
 void use_clean_TextField(TextField txt_field);
