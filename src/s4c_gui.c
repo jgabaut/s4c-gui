@@ -458,7 +458,7 @@ void handle_ToggleMenu(ToggleMenu toggle_menu)
     if (toggle_menu.statewin_width > 0 && toggle_menu.statewin_height > 0) {
         try_display_state = true;
         // Create a window for toggle states
-        state_win = newwin(toggle_menu.statewin_height, toggle_menu.statewin_width, toggle_menu.statewin_start_y, toggle_menu.statewin_start_y);
+        state_win = newwin(toggle_menu.statewin_height, toggle_menu.statewin_width, toggle_menu.statewin_start_y, toggle_menu.statewin_start_x);
         if (toggle_menu.statewin_boxed) box(state_win, 0, 0);
         if (toggle_menu.statewin_label != NULL) mvwprintw(state_win, 0, 1, toggle_menu.statewin_label);
         wrefresh(state_win);
@@ -491,10 +491,10 @@ void handle_ToggleMenu(ToggleMenu toggle_menu)
     if (try_display_state) draw_ToggleMenu_states(state_win, toggle_menu);
 
     // Create a window for the MENU
-    WINDOW *menu_win = newwin(toggle_menu.height, toggle_menu.width, toggle_menu.start_x, toggle_menu.start_y); //LINES/2, COLS / 2, 0, 0);
+    WINDOW *menu_win = newwin(toggle_menu.height, toggle_menu.width, toggle_menu.start_y, toggle_menu.start_x); //LINES/2, COLS / 2, 0, 0);
     keypad(menu_win, TRUE);
     set_menu_win(nc_menu, menu_win);
-    set_menu_sub(nc_menu, derwin(menu_win, toggle_menu.height -2, toggle_menu.width -2, toggle_menu.start_x +1, toggle_menu.start_y+1)); //LINES/2) - 2, COLS / 2 - 2, 1, 1));
+    set_menu_sub(nc_menu, derwin(menu_win, toggle_menu.height -2, toggle_menu.width -2, toggle_menu.start_y +1, toggle_menu.start_x+1)); //LINES/2) - 2, COLS / 2 - 2, 1, 1));
     set_menu_mark(nc_menu, "");
     if (toggle_menu.boxed) box(menu_win,0,0);
     post_menu(nc_menu);
