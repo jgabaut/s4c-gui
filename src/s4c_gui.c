@@ -74,12 +74,18 @@ TextField new_TextField_(TextField_Full_Handler* full_buffer_handler, TextField_
         if (free_func != NULL) {
             res->free_func = free_func;
         }
+        if (calloc_func != NULL) {
+            res->calloc_func = calloc_func;
+        } else {
+            res->calloc_func = s4c_gui_calloc;
+        }
     } else {
         res->free_func = free;
         res->malloc_func = s4c_gui_malloc;
+        res->calloc_func = s4c_gui_calloc;
         res = s4c_gui_malloc(sizeof(struct TextField_s));
     }
-    res->buffer = calloc(max_size+1, sizeof(char));
+    res->buffer = res->calloc_func(max_size+1, sizeof(char));
     memset(res->buffer, 0, max_size);
     res->height = height;
     res->width = width;
@@ -315,7 +321,7 @@ static void get_userText(TextField txt_field)
                 wrefresh(win);
                 // Move cursor back
                 wmove(win, 1, *length);
-                buffer[(*length)] = '\0';
+                buffer[(*length)-1] = '\0';
                 (*length)--;
             }
         } else {
@@ -372,8 +378,8 @@ ToggleMenu new_ToggleMenu_(Toggle* toggles, int num_toggles, ToggleMenu_Conf con
     return (ToggleMenu) {
         .toggles = toggles,
         .num_toggles = num_toggles,
-        .height = num_toggles+1,
-        .width = widest_label_size+1,
+        .height = num_toggles+2,
+        .width = widest_label_size+2,
         .start_x = conf.start_x,
         .start_y = conf.start_y,
         .boxed = conf.boxed,
@@ -497,7 +503,7 @@ void handle_ToggleMenu(ToggleMenu toggle_menu)
     WINDOW *menu_win = newwin(toggle_menu.height, toggle_menu.width, toggle_menu.start_y, toggle_menu.start_x); //LINES/2, COLS / 2, 0, 0);
     keypad(menu_win, TRUE);
     set_menu_win(nc_menu, menu_win);
-    set_menu_sub(nc_menu, derwin(menu_win, toggle_menu.height -2, toggle_menu.width -2, toggle_menu.start_y +1, toggle_menu.start_x+1)); //LINES/2) - 2, COLS / 2 - 2, 1, 1));
+    set_menu_sub(nc_menu, derwin(menu_win, toggle_menu.height -1, toggle_menu.width -2, toggle_menu.start_y +1, toggle_menu.start_x+1)); //LINES/2) - 2, COLS / 2 - 2, 1, 1));
     set_menu_mark(nc_menu, "");
     if (toggle_menu.boxed) box(menu_win,0,0);
     post_menu(nc_menu);
