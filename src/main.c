@@ -24,7 +24,7 @@ int textfield_main(void)
     size_t n_linters = 2;
     size_t max_size = 10;
 
-    TextField txt_field = new_TextField_centered_(&warn_TextField, my_linters, n_linters, linter_args, max_size, height, width, COLS, LINES, s4c_gui_malloc, s4c_gui_calloc, NULL);
+    TextField txt_field = new_TextField_centered_(&warn_TextField, my_linters, n_linters, linter_args, max_size, height, width, COLS, LINES, NULL, s4c_gui_malloc, s4c_gui_calloc, NULL);
 
     use_clean_TextField(txt_field);
 
@@ -60,6 +60,7 @@ int togglemenu_main(void)
     size_t txt_max_size_1 = 10;
     size_t txt_max_size_2 = 15;
 
+    const char* sidewin_label = "Toggle status:";
 
     // Define menu options and their toggle states
     Toggle toggles[] = {
@@ -72,6 +73,12 @@ int togglemenu_main(void)
     };
     int num_toggles = sizeof(toggles) / sizeof(toggles[0]);
     ToggleMenu toggle_menu = new_ToggleMenu(toggles, num_toggles);
+    toggle_menu.statewin_height = LINES;
+    toggle_menu.statewin_width = COLS/2;
+    toggle_menu.statewin_start_x = COLS/2;
+    toggle_menu.statewin_start_y = 0;
+    toggle_menu.statewin_boxed = true;
+    toggle_menu.statewin_label = sidewin_label;
     handle_ToggleMenu(toggle_menu);
 
     endwin(); // End ncurses
