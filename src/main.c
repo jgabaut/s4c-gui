@@ -22,8 +22,9 @@ int textfield_main(void)
     };
 
     size_t n_linters = 2;
+    size_t max_size = 10;
 
-    TextField txt_field = new_TextField_centered_(&warn_TextField, my_linters, n_linters, linter_args, height, width, COLS, LINES, s4c_gui_malloc, s4c_gui_calloc, NULL);
+    TextField txt_field = new_TextField_centered_(&warn_TextField, my_linters, n_linters, linter_args, max_size, height, width, COLS, LINES, s4c_gui_malloc, s4c_gui_calloc, NULL);
 
     use_clean_TextField(txt_field);
 
@@ -56,14 +57,18 @@ int togglemenu_main(void)
     int start_y = (LINES/2) +3;
     int start_x = 2;
 
+    size_t txt_max_size_1 = 10;
+    size_t txt_max_size_2 = 15;
+
+
     // Define menu options and their toggle states
     Toggle toggles[] = {
         {BOOL_TOGGLE, (ToggleState){.bool_state = true}, "[] Light(U)", false},
         {MULTI_STATE_TOGGLE, (ToggleState){.ts_state.current_state = 0, .ts_state.num_states = MAX_STATES}, "<Volume>(L)", true},
         {BOOL_TOGGLE, (ToggleState){.bool_state = false}, "[] Root (L)", true},
         {MULTI_STATE_TOGGLE, (ToggleState){.ts_state.current_state = 0, .ts_state.num_states = MAX_STATES}, "<Frequency> (U)", false},
-        {TEXTFIELD_TOGGLE, (ToggleState){.txt_state = new_TextField(height, width, start_y, start_x)}, "Token-> (L)", true},
-        {TEXTFIELD_TOGGLE, (ToggleState){.txt_state = new_TextField(height, width, start_y, start_x)}, "Name-> (U)", false},
+        {TEXTFIELD_TOGGLE, (ToggleState){.txt_state = new_TextField(txt_max_size_1, height, width, start_y, start_x)}, "Token-> (L)", true},
+        {TEXTFIELD_TOGGLE, (ToggleState){.txt_state = new_TextField(txt_max_size_2, height, width, start_y, start_x)}, "Name-> (U)", false},
     };
     int num_toggles = sizeof(toggles) / sizeof(toggles[0]);
     ToggleMenu toggle_menu = new_ToggleMenu(toggles, num_toggles);
