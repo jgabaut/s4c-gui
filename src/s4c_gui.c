@@ -79,6 +79,7 @@ TextField new_TextField_(TextField_Full_Handler* full_buffer_handler, TextField_
         res->malloc_func = s4c_gui_malloc;
         res = s4c_gui_malloc(sizeof(struct TextField_s));
     }
+    memset(res->buffer,0,TEXTFIELD_MAX_LENGTH);
     res->height = height;
     res->width = width;
     res->start_x = start_x;
