@@ -110,6 +110,8 @@ typedef enum {
     TEXTFIELD_TOGGLE,
 } ToggleType;
 
+typedef const char* (ToggleMultiState_Formatter)(int current_state);
+
 typedef struct ToggleMultiState {
     int current_state;
     int num_states;
@@ -126,6 +128,7 @@ typedef struct {
     ToggleState state;
     char *label;
     bool locked; // Toggle lock
+    ToggleMultiState_Formatter* multistate_formatter;
 } Toggle;
 
 typedef struct ToggleMenu_Conf {

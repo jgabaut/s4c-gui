@@ -470,7 +470,11 @@ void draw_ToggleMenu_states(WINDOW *win, ToggleMenu toggle_menu)
         if (toggles[i].type == BOOL_TOGGLE) {
             mvwprintw(win, i + 1, 20, "[%s]", toggles[i].state.bool_state ? "ON" : "OFF");
         } else if (toggles[i].type == MULTI_STATE_TOGGLE) {
-            mvwprintw(win, i + 1, 20, "[%d/%d]", toggles[i].state.ts_state.current_state + 1, toggles[i].state.ts_state.num_states);
+            if (toggles[i].multistate_formatter != NULL) {
+                mvwprintw(win, i + 1, 20, "[%s]", toggles[i].multistate_formatter(toggles[i].state.ts_state.current_state +1));
+            } else {
+                mvwprintw(win, i + 1, 20, "[%d/%d]", toggles[i].state.ts_state.current_state + 1, toggles[i].state.ts_state.num_states);
+            }
         } else if (toggles[i].type == TEXTFIELD_TOGGLE) {
             mvwprintw(win, i + 1, 20, "%s", get_TextField_value(toggles[i].state.txt_state));
         }
