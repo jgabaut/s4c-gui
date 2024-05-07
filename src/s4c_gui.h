@@ -21,7 +21,7 @@
 
 #define S4C_GUI_MAJOR 0 /**< Represents current major release.*/
 #define S4C_GUI_MINOR 0 /**< Represents current minor release.*/
-#define S4C_GUI_PATCH 1 /**< Represents current patch release.*/
+#define S4C_GUI_PATCH 2 /**< Represents current patch release.*/
 
 /* Defines current API version number from KLS_MAJOR, KLS_MINOR and KLS_PATCH.
  */
@@ -32,7 +32,7 @@ static const int S4C_GUI_API_VERSION_INT =
 /**
  * Defines current API version string.
  */
-static const char S4C_GUI_API_VERSION_STRING[] = "0.0.1"; /**< Represents current version with MAJOR.MINOR.PATCH format.*/
+static const char S4C_GUI_API_VERSION_STRING[] = "0.0.2"; /**< Represents current version with MAJOR.MINOR.PATCH format.*/
 
 /**
  * Returns current s4c_gui version as a string.
@@ -137,6 +137,12 @@ typedef struct ToggleMenu_Conf {
     int start_y;
     bool boxed;
     int quit_key;
+    int statewin_width;
+    int statewin_height;
+    int statewin_start_x;
+    int statewin_start_y;
+    bool statewin_boxed;
+    const char* statewin_label;
 } ToggleMenu_Conf;
 
 typedef struct ToggleMenu {
@@ -148,6 +154,12 @@ typedef struct ToggleMenu {
     int start_y;
     bool boxed;
     int quit_key;
+    int statewin_width;
+    int statewin_height;
+    int statewin_start_x;
+    int statewin_start_y;
+    bool statewin_boxed;
+    const char* statewin_label;
 } ToggleMenu;
 
 ToggleMenu new_ToggleMenu_(Toggle* toggles, int num_toggles, ToggleMenu_Conf conf);
