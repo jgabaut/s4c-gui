@@ -79,6 +79,7 @@ TextField new_TextField_(TextField_Full_Handler* full_buffer_handler, TextField_
         res->malloc_func = s4c_gui_malloc;
         res = s4c_gui_malloc(sizeof(struct TextField_s));
     }
+    memset(res->buffer,0,TEXTFIELD_MAX_LENGTH);
     res->height = height;
     res->width = width;
     res->start_x = start_x;
@@ -100,7 +101,7 @@ TextField new_TextField_(TextField_Full_Handler* full_buffer_handler, TextField_
             res->calloc_func = s4c_gui_calloc;
             res->linters = s4c_gui_calloc(num_linters, sizeof(TextField_Linter*));
         }
-        res->linter_args = calloc_func(num_linters, sizeof(void*));
+        res->linter_args = res->calloc_func(num_linters, sizeof(void*));
         for (size_t i=0; i < num_linters; i++) {
             if (linters[i] != NULL) {
                 res->linters[i] = linters[i];
@@ -354,7 +355,7 @@ void use_clean_TextField(TextField txt_field)
 
 static const int TOGGLE_MENU_DEFAULT_QUIT_KEY = KEY_F(1);
 
-static void cycle_state(Toggle *toggle)
+static void cycle_toggle_state(Toggle *toggle)
 {
     toggle->state.ts_state.current_state = (toggle->state.ts_state.current_state + 1) % toggle->state.ts_state.num_states;
 }
@@ -375,6 +376,12 @@ ToggleMenu new_ToggleMenu_(Toggle* toggles, int num_toggles, ToggleMenu_Conf con
         .start_y = conf.start_y,
         .boxed = conf.boxed,
         .quit_key = ((conf.quit_key < 0) ? TOGGLE_MENU_DEFAULT_QUIT_KEY : conf.quit_key),
+        .statewin_height = conf.statewin_height,
+        .statewin_width = conf.statewin_width,
+        .statewin_start_x = conf.statewin_start_x,
+        .statewin_start_y = conf.statewin_start_y,
+        .statewin_boxed = conf.statewin_boxed,
+        .statewin_label = conf.statewin_label,
     };
 }
 
@@ -419,8 +426,8 @@ void draw_ToggleMenu_states(WINDOW *win, ToggleMenu toggle_menu)
     // Clear the window
     wclear(win);
 
-    box(win, 0, 0);
-    mvwprintw(win, 0, 1, "Toggle States");
+    if (toggle_menu.statewin_boxed) box(win, 0, 0);
+    if (toggle_menu.statewin_label != NULL) mvwprintw(win, 0, 1, toggle_menu.statewin_label);
 
     // Print toggle states
     for (int i = 0; i < num_toggles; i++) {
@@ -447,11 +454,16 @@ void draw_ToggleMenu_states(WINDOW *win, ToggleMenu toggle_menu)
 
 void handle_ToggleMenu(ToggleMenu toggle_menu)
 {
-    // Create a window for toggle states
-    WINDOW *state_win = newwin(LINES, COLS / 2, 0, COLS / 2);
-    box(state_win, 0, 0);
-    mvwprintw(state_win, 0, 1, "Toggle States");
-    wrefresh(state_win);
+    bool try_display_state = false;
+    WINDOW* state_win = NULL;
+    if (toggle_menu.statewin_width > 0 && toggle_menu.statewin_height > 0) {
+        try_display_state = true;
+        // Create a window for toggle states
+        state_win = newwin(toggle_menu.statewin_height, toggle_menu.statewin_width, toggle_menu.statewin_start_y, toggle_menu.statewin_start_x);
+        if (toggle_menu.statewin_boxed) box(state_win, 0, 0);
+        if (toggle_menu.statewin_label != NULL) mvwprintw(state_win, 0, 1, toggle_menu.statewin_label);
+        wrefresh(state_win);
+    }
 
     Toggle* toggles = toggle_menu.toggles;
     int num_toggles = toggle_menu.num_toggles;
@@ -477,13 +489,13 @@ void handle_ToggleMenu(ToggleMenu toggle_menu)
     toggle_items[num_toggles] = NULL;
     nc_menu = new_menu(toggle_items);
 
-    draw_ToggleMenu_states(state_win, toggle_menu);
+    if (try_display_state) draw_ToggleMenu_states(state_win, toggle_menu);
 
     // Create a window for the MENU
-    WINDOW *menu_win = newwin(toggle_menu.height, toggle_menu.width, toggle_menu.start_x, toggle_menu.start_y); //LINES/2, COLS / 2, 0, 0);
+    WINDOW *menu_win = newwin(toggle_menu.height, toggle_menu.width, toggle_menu.start_y, toggle_menu.start_x); //LINES/2, COLS / 2, 0, 0);
     keypad(menu_win, TRUE);
     set_menu_win(nc_menu, menu_win);
-    set_menu_sub(nc_menu, derwin(menu_win, toggle_menu.height -2, toggle_menu.width -2, toggle_menu.start_x +1, toggle_menu.start_y+1)); //LINES/2) - 2, COLS / 2 - 2, 1, 1));
+    set_menu_sub(nc_menu, derwin(menu_win, toggle_menu.height -2, toggle_menu.width -2, toggle_menu.start_y +1, toggle_menu.start_x+1)); //LINES/2) - 2, COLS / 2 - 2, 1, 1));
     set_menu_mark(nc_menu, "");
     if (toggle_menu.boxed) box(menu_win,0,0);
     post_menu(nc_menu);
@@ -512,8 +524,8 @@ void handle_ToggleMenu(ToggleMenu toggle_menu)
             if (current_item(nc_menu)) {
                 Toggle *toggle = (Toggle *)item_userptr(current_item(nc_menu));
                 if (toggle && toggle->type == MULTI_STATE_TOGGLE && !toggle->locked) {
-                    cycle_state(toggle);
-                    draw_ToggleMenu_states(state_win, toggle_menu);
+                    cycle_toggle_state(toggle);
+                    if (try_display_state) draw_ToggleMenu_states(state_win, toggle_menu);
                 }
             }
             break;
@@ -522,8 +534,8 @@ void handle_ToggleMenu(ToggleMenu toggle_menu)
             if (current_item(nc_menu)) {
                 Toggle *toggle = (Toggle *)item_userptr(current_item(nc_menu));
                 if (toggle && toggle->type == MULTI_STATE_TOGGLE && !toggle->locked) {
-                    cycle_state(toggle);
-                    draw_ToggleMenu_states(state_win, toggle_menu);
+                    cycle_toggle_state(toggle);
+                    if (try_display_state) draw_ToggleMenu_states(state_win, toggle_menu);
                 }
             }
             break;
@@ -536,7 +548,7 @@ void handle_ToggleMenu(ToggleMenu toggle_menu)
                     draw_ToggleMenu_states(state_win, toggle_menu);
                 } else if (toggle && toggle->type == TEXTFIELD_TOGGLE && !toggle->locked) {
                     use_clean_TextField(toggle->state.txt_state);
-                    draw_ToggleMenu_states(state_win, toggle_menu);
+                    if (try_display_state) draw_ToggleMenu_states(state_win, toggle_menu);
                 }
             }
             break;
@@ -551,7 +563,7 @@ void handle_ToggleMenu(ToggleMenu toggle_menu)
     }
     free(toggle_items);
     delwin(menu_win);
-    delwin(state_win);
+    if (try_display_state) delwin(state_win);
 }
 // }
 // TOGGLE_H_
