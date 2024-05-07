@@ -213,8 +213,10 @@ void draw_TextField(TextField txt)
     assert(txt!=NULL);
     // Draw a box around the window
     box(txt->win, 0, 0);
-    if (txt->buffer[0] == '\0' && txt->width > strlen("Start typing...")) {
-        mvwprintw(txt->win, 1,1, "Start typing...");
+    if (txt->prompt != NULL) {
+        if (txt->buffer[0] == '\0' && txt->width > strlen(txt->prompt)) {
+            mvwprintw(txt->win, 1,1, txt->prompt);
+        }
     }
     wrefresh(txt->win);
 }
@@ -334,6 +336,11 @@ static void get_userText(TextField txt_field)
                 wmove(win, 1, *length);
                 buffer[(*length)-1] = '\0';
                 (*length)--;
+                if (*length == 0 && txt_field->prompt != NULL) {
+                    //Redraw prompt
+                    mvwprintw(win, 1, 1, txt_field->prompt);
+                    wmove(win, 1, input_start_x);
+                }
             }
         } else {
             if (*length < max_length) {
