@@ -44,6 +44,28 @@ int textfield_main(void)
     return 0;
 }
 
+const char* my_format(int val)
+{
+    switch(val) {
+        case MAX_STATES: {
+            return "MAX";
+        }
+        break;
+        case 1: {
+            return "one";
+        }
+        break;
+        case 2: {
+            return "two";
+        }
+        break;
+        default: {
+            return "too high!";
+        }
+        break;
+    }
+}
+
 int togglemenu_main(void)
 {
     // Initialize ncurses
@@ -68,7 +90,7 @@ int togglemenu_main(void)
         {BOOL_TOGGLE, (ToggleState){.bool_state = true}, "[] Light(U)", false},
         {MULTI_STATE_TOGGLE, (ToggleState){.ts_state.current_state = 0, .ts_state.num_states = MAX_STATES}, "<Volume>(L)", true},
         {BOOL_TOGGLE, (ToggleState){.bool_state = false}, "[] Root (L)", true},
-        {MULTI_STATE_TOGGLE, (ToggleState){.ts_state.current_state = 0, .ts_state.num_states = MAX_STATES}, "<Frequency> (U)", false},
+        {MULTI_STATE_TOGGLE, (ToggleState){.ts_state.current_state = 0, .ts_state.num_states = MAX_STATES}, "<Frequency> (U)", false, my_format},
         {TEXTFIELD_TOGGLE, (ToggleState){.txt_state = new_TextField(txt_max_size_1, height, width, start_y, start_x)}, "Token-> (L)", true},
         {TEXTFIELD_TOGGLE, (ToggleState){.txt_state = new_TextField(txt_max_size_2, height, width, start_y, start_x)}, "Name-> (U)", false},
     };
