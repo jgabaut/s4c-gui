@@ -215,7 +215,7 @@ void draw_TextField(TextField txt)
     box(txt->win, 0, 0);
     if (txt->prompt != NULL) {
         if (txt->buffer[0] == '\0' && txt->width > strlen(txt->prompt)) {
-            mvwprintw(txt->win, 1,1, txt->prompt);
+            mvwprintw(txt->win, 1,1, "%s", txt->prompt);
         }
     }
     wrefresh(txt->win);
@@ -338,7 +338,7 @@ static void get_userText(TextField txt_field)
                 (*length)--;
                 if (*length == 0 && txt_field->prompt != NULL) {
                     //Redraw prompt
-                    mvwprintw(win, 1, 1, txt_field->prompt);
+                    mvwprintw(win, 1, 1, "%s", txt_field->prompt);
                     wmove(win, 1, input_start_x);
                 }
             }
@@ -459,7 +459,7 @@ void draw_ToggleMenu_states(WINDOW *win, ToggleMenu toggle_menu)
     wclear(win);
 
     if (toggle_menu.statewin_boxed) box(win, 0, 0);
-    if (toggle_menu.statewin_label != NULL) mvwprintw(win, 0, 1, toggle_menu.statewin_label);
+    if (toggle_menu.statewin_label != NULL) mvwprintw(win, 0, 1, "%s", toggle_menu.statewin_label);
 
     // Print toggle states
     for (int i = 0; i < num_toggles; i++) {
@@ -497,7 +497,7 @@ void handle_ToggleMenu(ToggleMenu toggle_menu)
         // Create a window for toggle states
         state_win = newwin(toggle_menu.statewin_height, toggle_menu.statewin_width, toggle_menu.statewin_start_y, toggle_menu.statewin_start_x);
         if (toggle_menu.statewin_boxed) box(state_win, 0, 0);
-        if (toggle_menu.statewin_label != NULL) mvwprintw(state_win, 0, 1, toggle_menu.statewin_label);
+        if (toggle_menu.statewin_label != NULL) mvwprintw(state_win, 0, 1, "%s", toggle_menu.statewin_label);
         wrefresh(state_win);
     }
 
