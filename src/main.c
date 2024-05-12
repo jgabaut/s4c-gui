@@ -47,8 +47,8 @@ int textfield_main(void)
 const char* my_format(int val)
 {
     switch(val) {
-        case MAX_STATES: {
-            return "MAX";
+        case 0: {
+            return "zero";
         }
         break;
         case 1: {
@@ -84,6 +84,8 @@ int togglemenu_main(void)
     size_t txt_max_size_2 = 15;
 
     const char* sidewin_label = "Toggle status:";
+
+    const int MAX_STATES = 3;
 
     // Define menu options and their toggle states
     Toggle toggles[] = {

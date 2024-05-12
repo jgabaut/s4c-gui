@@ -102,8 +102,6 @@ WINDOW* get_TextField_win(TextField txt_field);
 #include "text_field.h"
 #endif // TEXT_FIELD_H_
 
-#define MAX_STATES 3 // Maximum number of states for the second kind of toggle
-
 typedef enum {
     BOOL_TOGGLE,
     MULTI_STATE_TOGGLE,
