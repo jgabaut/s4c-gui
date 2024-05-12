@@ -142,6 +142,10 @@ typedef struct ToggleMenu_Conf {
     int statewin_start_y;
     bool statewin_boxed;
     const char* statewin_label;
+    int key_up;
+    int key_right;
+    int key_down;
+    int key_left;
 } ToggleMenu_Conf;
 
 typedef struct ToggleMenu {
@@ -159,6 +163,10 @@ typedef struct ToggleMenu {
     int statewin_start_y;
     bool statewin_boxed;
     const char* statewin_label;
+    int key_up;
+    int key_right;
+    int key_down;
+    int key_left;
 } ToggleMenu;
 
 ToggleMenu new_ToggleMenu_(Toggle* toggles, int num_toggles, ToggleMenu_Conf conf);
