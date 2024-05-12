@@ -104,6 +104,8 @@ int togglemenu_main(void)
     toggle_menu.statewin_start_y = 0;
     toggle_menu.statewin_boxed = true;
     toggle_menu.statewin_label = sidewin_label;
+    toggle_menu.key_up = 'j';
+    toggle_menu.key_down = 'k';
     handle_ToggleMenu(toggle_menu);
 
     endwin(); // End ncurses

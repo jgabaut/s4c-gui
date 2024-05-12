@@ -414,6 +414,10 @@ ToggleMenu new_ToggleMenu_(Toggle* toggles, int num_toggles, ToggleMenu_Conf con
         .statewin_start_y = conf.statewin_start_y,
         .statewin_boxed = conf.statewin_boxed,
         .statewin_label = conf.statewin_label,
+        .key_up = conf.key_up,
+        .key_right = conf.key_right,
+        .key_down = conf.key_down,
+        .key_left = conf.key_left,
     };
 }
 
@@ -422,6 +426,10 @@ static const ToggleMenu_Conf TOGGLE_MENU_DEFAULT_CONF = {
     .start_y = 0,
     .boxed = true,
     .quit_key = TOGGLE_MENU_DEFAULT_QUIT_KEY,
+    .key_up = KEY_UP,
+    .key_right = KEY_RIGHT,
+    .key_down = KEY_DOWN,
+    .key_left = KEY_LEFT,
 };
 
 ToggleMenu new_ToggleMenu(Toggle* toggles, int num_toggles)
@@ -540,22 +548,17 @@ void handle_ToggleMenu(ToggleMenu toggle_menu)
     // Main loop
     int c;
     while ((c = wgetch(menu_win)) != toggle_menu.quit_key) {
-        switch (c) {
-        case KEY_DOWN: {
+        if ( c == toggle_menu.key_down) {
             int res = menu_driver(nc_menu, REQ_DOWN_ITEM);
             if (res == E_REQUEST_DENIED) {
                 res = menu_driver(nc_menu, REQ_FIRST_ITEM);
             }
-        }
-        break;
-        case KEY_UP: {
+        } else if ( c == toggle_menu.key_up) {
             int res = menu_driver(nc_menu, REQ_UP_ITEM);
             if (res == E_REQUEST_DENIED) {
                 res = menu_driver(nc_menu, REQ_LAST_ITEM);
             }
-        }
-        break;
-        case KEY_RIGHT:
+        } else if ( c == toggle_menu.key_right) {
             // Cycle through states for selected item
             if (current_item(nc_menu)) {
                 Toggle *toggle = (Toggle *)item_userptr(current_item(nc_menu));
@@ -564,8 +567,7 @@ void handle_ToggleMenu(ToggleMenu toggle_menu)
                     if (try_display_state) draw_ToggleMenu_states(state_win, toggle_menu);
                 }
             }
-            break;
-        case KEY_LEFT:
+        } else if ( c ==  toggle_menu.key_left) {
             // Cycle through states for selected item
             if (current_item(nc_menu)) {
                 Toggle *toggle = (Toggle *)item_userptr(current_item(nc_menu));
@@ -574,8 +576,7 @@ void handle_ToggleMenu(ToggleMenu toggle_menu)
                     if (try_display_state) draw_ToggleMenu_states(state_win, toggle_menu);
                 }
             }
-            break;
-        case '\n':
+        } else if ( c == '\n') {
             // Toggle state for selected BOOL_TOGGLE item
             if (current_item(nc_menu)) {
                 Toggle *toggle = (Toggle *)item_userptr(current_item(nc_menu));
@@ -587,7 +588,6 @@ void handle_ToggleMenu(ToggleMenu toggle_menu)
                     if (try_display_state) draw_ToggleMenu_states(state_win, toggle_menu);
                 }
             }
-            break;
         }
     }
 
