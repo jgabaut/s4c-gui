@@ -110,8 +110,8 @@ TextField new_TextField_(TextField_Full_Handler* full_buffer_handler, TextField_
                 res->free_func = free_func;
             }
         } else {
-            res->calloc_func = &S4C_GUI_CALLOC;
-            res->linters = S4C_GUI_CALLOC(num_linters, sizeof(TextField_Linter*));
+            res->calloc_func = s4c_gui_inner_calloc;
+            res->linters = s4c_gui_inner_calloc(num_linters, sizeof(TextField_Linter*));
         }
         res->linter_args = res->calloc_func(num_linters, sizeof(void*));
         for (size_t i=0; i < num_linters; i++) {
