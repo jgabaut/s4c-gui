@@ -62,6 +62,9 @@ typedef void*(s4c_gui_malloc_func)(size_t size); /**< Used to select an allocati
 typedef void*(s4c_gui_calloc_func)(size_t count, size_t size); /**< Used to select a counted allocation function.*/
 typedef void(s4c_gui_free_func)(void* obj); /**< Used to select a free function.*/
 
+extern s4c_gui_malloc_func* s4c_gui_inner_malloc;
+extern s4c_gui_calloc_func* s4c_gui_inner_calloc;
+
 #ifndef TEXT_FIELD_H_
 #define TEXT_FIELD_H_
 #include <ncurses.h>
