@@ -27,6 +27,9 @@ int int_s4c_gui_version(void)
     return S4C_GUI_API_VERSION_INT;
 }
 
+s4c_gui_malloc_func* s4c_gui_inner_malloc = &S4C_GUI_MALLOC;
+s4c_gui_calloc_func* s4c_gui_inner_calloc = &S4C_GUI_CALLOC;
+
 #ifndef TEXT_FIELD_H_
 #error "This should not happen. TEXT_FIELD_H_ is defined in s4c_gui.h"
 #include "text_field.h"
@@ -75,13 +78,13 @@ TextField new_TextField_(TextField_Full_Handler* full_buffer_handler, TextField_
         if (calloc_func != NULL) {
             res->calloc_func = calloc_func;
         } else {
-            res->calloc_func = &S4C_GUI_CALLOC;
+            res->calloc_func = s4c_gui_inner_calloc;
         }
     } else {
         res->free_func = free;
-        res->malloc_func = &S4C_GUI_MALLOC;
-        res->calloc_func = &S4C_GUI_CALLOC;
-        res = S4C_GUI_MALLOC(sizeof(struct TextField_s));
+        res->malloc_func = s4c_gui_inner_malloc;
+        res->calloc_func = s4c_gui_inner_calloc;
+        res = s4c_gui_inner_malloc(sizeof(struct TextField_s));
     }
     res->buffer = res->calloc_func(max_size+1, sizeof(char));
     memset(res->buffer, 0, max_size);
@@ -130,17 +133,17 @@ TextField new_TextField_centered_(TextField_Full_Handler* full_buffer_handler, T
 
 TextField new_TextField(size_t max_size, int height, int width, int start_x, int start_y)
 {
-    return new_TextField_(&warn_TextField, default_linters, TEXTFIELD_DEFAULT_LINTERS_TOT, default_linter_args, max_size, height, width, start_x, start_y, NULL, S4C_GUI_MALLOC, S4C_GUI_CALLOC, NULL);
+    return new_TextField_(&warn_TextField, default_linters, TEXTFIELD_DEFAULT_LINTERS_TOT, default_linter_args, max_size, height, width, start_x, start_y, NULL, s4c_gui_inner_malloc, s4c_gui_inner_calloc, NULL);
 }
 
 TextField new_TextField_centered(size_t max_size, int height, int width, int bound_x, int bound_y)
 {
-    return new_TextField_centered_(&warn_TextField, default_linters, TEXTFIELD_DEFAULT_LINTERS_TOT, default_linter_args, max_size, height, width, bound_x, bound_y, NULL, S4C_GUI_MALLOC, S4C_GUI_CALLOC, NULL);
+    return new_TextField_centered_(&warn_TextField, default_linters, TEXTFIELD_DEFAULT_LINTERS_TOT, default_linter_args, max_size, height, width, bound_x, bound_y, NULL, s4c_gui_inner_malloc, s4c_gui_inner_calloc, NULL);
 }
 
 TextField new_TextField_linted(TextField_Linter** linters, size_t num_linters, const void** linter_args, size_t max_size, int height, int width, int start_x, int start_y)
 {
-    return new_TextField_(&warn_TextField, linters, num_linters, linter_args, max_size, height, width, start_x, start_y, NULL, S4C_GUI_MALLOC, S4C_GUI_CALLOC, NULL);
+    return new_TextField_(&warn_TextField, linters, num_linters, linter_args, max_size, height, width, start_x, start_y, NULL, s4c_gui_inner_malloc, s4c_gui_inner_calloc, NULL);
 }
 
 TextField new_TextField_alloc(size_t max_size, int height, int width, int start_x, int start_y, s4c_gui_malloc_func* malloc_func, s4c_gui_calloc_func* calloc_func, s4c_gui_free_func* free_func)
