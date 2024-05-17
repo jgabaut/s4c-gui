@@ -117,12 +117,14 @@ WINDOW* get_TextField_win(TextField txt_field);
 
 #ifdef _WIN32
 #include <ncursesw/ncurses.h>
+#include <ncursesw/menu.h>
 #else
 #include <ncurses.h>
+#include <menu.h>
 #endif
 
-#include <menu.h>
 #include <stdlib.h>
+
 #ifndef TEXT_FIELD_H_
 #error "This should not happen. TEXT_FIELD_H_ is defined in this same file."
 #include "text_field.h"
