@@ -25,7 +25,7 @@ int textfield_main(void)
     size_t max_size = 10;
     char* prompt = "Start typing";
 
-    TextField txt_field = new_TextField_centered_(&warn_TextField, my_linters, n_linters, linter_args, max_size, height, width, COLS, LINES, prompt, s4c_gui_malloc, s4c_gui_calloc, NULL);
+    TextField txt_field = new_TextField_centered_(&warn_TextField, my_linters, n_linters, linter_args, max_size, height, width, COLS, LINES, prompt, S4C_GUI_MALLOC, S4C_GUI_CALLOC, NULL);
 
     use_clean_TextField(txt_field);
 

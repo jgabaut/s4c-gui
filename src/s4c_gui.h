@@ -19,9 +19,23 @@
 #define S4C_GUI_H_
 #include <stdlib.h>
 
+/**
+ * Function name to use in place of malloc.
+ */
+#ifndef S4C_GUI_MALLOC
+#define S4C_GUI_MALLOC malloc
+#endif // S4C_GUI_MALLOC
+
+/**
+ * Function name to use in place of calloc.
+ */
+#ifndef S4C_GUI_CALLOC
+#define S4C_GUI_CALLOC calloc
+#endif // S4C_GUI_CALLOC
+
 #define S4C_GUI_MAJOR 0 /**< Represents current major release.*/
 #define S4C_GUI_MINOR 0 /**< Represents current minor release.*/
-#define S4C_GUI_PATCH 5 /**< Represents current patch release.*/
+#define S4C_GUI_PATCH 6 /**< Represents current patch release.*/
 
 /* Defines current API version number from KLS_MAJOR, KLS_MINOR and KLS_PATCH.
  */
@@ -32,7 +46,7 @@ static const int S4C_GUI_API_VERSION_INT =
 /**
  * Defines current API version string.
  */
-static const char S4C_GUI_API_VERSION_STRING[] = "0.0.5"; /**< Represents current version with MAJOR.MINOR.PATCH format.*/
+static const char S4C_GUI_API_VERSION_STRING[] = "0.0.6-dev"; /**< Represents current version with MAJOR.MINOR.PATCH format.*/
 
 /**
  * Returns current s4c_gui version as a string.
@@ -47,9 +61,6 @@ int int_s4c_gui_version(void);
 typedef void*(s4c_gui_malloc_func)(size_t size); /**< Used to select an allocation function.*/
 typedef void*(s4c_gui_calloc_func)(size_t count, size_t size); /**< Used to select a counted allocation function.*/
 typedef void(s4c_gui_free_func)(void* obj); /**< Used to select a free function.*/
-
-extern s4c_gui_malloc_func* s4c_gui_malloc;
-extern s4c_gui_calloc_func* s4c_gui_calloc;
 
 #ifndef TEXT_FIELD_H_
 #define TEXT_FIELD_H_

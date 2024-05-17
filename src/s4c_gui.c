@@ -27,9 +27,6 @@ int int_s4c_gui_version(void)
     return S4C_GUI_API_VERSION_INT;
 }
 
-s4c_gui_malloc_func* s4c_gui_malloc = &malloc;
-s4c_gui_calloc_func* s4c_gui_calloc = &calloc;
-
 #ifndef TEXT_FIELD_H_
 #error "This should not happen. TEXT_FIELD_H_ is defined in s4c_gui.h"
 #include "text_field.h"
@@ -78,13 +75,13 @@ TextField new_TextField_(TextField_Full_Handler* full_buffer_handler, TextField_
         if (calloc_func != NULL) {
             res->calloc_func = calloc_func;
         } else {
-            res->calloc_func = s4c_gui_calloc;
+            res->calloc_func = &S4C_GUI_CALLOC;
         }
     } else {
         res->free_func = free;
-        res->malloc_func = s4c_gui_malloc;
-        res->calloc_func = s4c_gui_calloc;
-        res = s4c_gui_malloc(sizeof(struct TextField_s));
+        res->malloc_func = &S4C_GUI_MALLOC;
+        res->calloc_func = &S4C_GUI_CALLOC;
+        res = S4C_GUI_MALLOC(sizeof(struct TextField_s));
     }
     res->buffer = res->calloc_func(max_size+1, sizeof(char));
     memset(res->buffer, 0, max_size);
@@ -110,8 +107,8 @@ TextField new_TextField_(TextField_Full_Handler* full_buffer_handler, TextField_
                 res->free_func = free_func;
             }
         } else {
-            res->calloc_func = s4c_gui_calloc;
-            res->linters = s4c_gui_calloc(num_linters, sizeof(TextField_Linter*));
+            res->calloc_func = &S4C_GUI_CALLOC;
+            res->linters = S4C_GUI_CALLOC(num_linters, sizeof(TextField_Linter*));
         }
         res->linter_args = res->calloc_func(num_linters, sizeof(void*));
         for (size_t i=0; i < num_linters; i++) {
