@@ -159,6 +159,8 @@ typedef struct {
 
 typedef void(ToggleMenu_MouseEvent_Handler)(MEVENT* event);
 
+
+// Reference: https://tldp.org/HOWTO/NCURSES-Programming-HOWTO/mouse.html
 #ifndef TOGGLEMENU_DEFAULT_MOUSEEVENTS_MASK
 #define TOGGLEMENU_DEFAULT_MOUSEEVENTS_MASK ALL_MOUSE_EVENTS
 #endif // !TOGGLEMENU_DEFAULT_MOUSEEVENTS_MASK
