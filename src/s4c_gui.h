@@ -35,7 +35,7 @@
 
 #define S4C_GUI_MAJOR 0 /**< Represents current major release.*/
 #define S4C_GUI_MINOR 0 /**< Represents current minor release.*/
-#define S4C_GUI_PATCH 7 /**< Represents current patch release.*/
+#define S4C_GUI_PATCH 8 /**< Represents current patch release.*/
 
 /* Defines current API version number from KLS_MAJOR, KLS_MINOR and KLS_PATCH.
  */
@@ -46,7 +46,7 @@ static const int S4C_GUI_API_VERSION_INT =
 /**
  * Defines current API version string.
  */
-static const char S4C_GUI_API_VERSION_STRING[] = "0.0.7"; /**< Represents current version with MAJOR.MINOR.PATCH format.*/
+static const char S4C_GUI_API_VERSION_STRING[] = "0.0.8-dev"; /**< Represents current version with MAJOR.MINOR.PATCH format.*/
 
 /**
  * Returns current s4c_gui version as a string.
@@ -157,6 +157,12 @@ typedef struct {
     ToggleMultiState_Formatter* multistate_formatter;
 } Toggle;
 
+typedef void(ToggleMenu_MouseEvent_Handler)(MEVENT* event);
+
+#ifndef TOGGLEMENU_DEFAULT_MOUSEEVENTS_MASK
+#define TOGGLEMENU_DEFAULT_MOUSEEVENTS_MASK ALL_MOUSE_EVENTS
+#endif // !TOGGLEMENU_DEFAULT_MOUSEEVENTS_MASK
+
 typedef struct ToggleMenu_Conf {
     int height;
     int width;
@@ -174,6 +180,9 @@ typedef struct ToggleMenu_Conf {
     int key_right;
     int key_down;
     int key_left;
+    bool get_mouse_events;
+    mmask_t mouse_events_mask;
+    ToggleMenu_MouseEvent_Handler* mouse_handler;
 } ToggleMenu_Conf;
 
 typedef struct ToggleMenu {
@@ -195,8 +204,12 @@ typedef struct ToggleMenu {
     int key_right;
     int key_down;
     int key_left;
+    bool get_mouse_events;
+    mmask_t mouse_events_mask;
+    ToggleMenu_MouseEvent_Handler* mouse_handler;
 } ToggleMenu;
 
+void ToggleMenu_default_mousehandler__(MEVENT* mouse_event);
 ToggleMenu new_ToggleMenu_(Toggle* toggles, int num_toggles, ToggleMenu_Conf conf);
 ToggleMenu new_ToggleMenu(Toggle* toggles, int num_toggles);
 void draw_ToggleMenu_states(WINDOW *win, ToggleMenu toggle_menu);
