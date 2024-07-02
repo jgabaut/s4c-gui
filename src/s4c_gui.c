@@ -418,7 +418,18 @@ ToggleMenu new_ToggleMenu_(Toggle* toggles, int num_toggles, ToggleMenu_Conf con
         .key_right = conf.key_right,
         .key_down = conf.key_down,
         .key_left = conf.key_left,
+        .get_mouse_events = conf.get_mouse_events,
+        .mouse_handler = conf.mouse_handler,
+        .mouse_events_mask = conf.mouse_events_mask,
     };
+}
+
+void default_ToggleMenu_mousehandler__(MEVENT* mouse_event)
+{
+    endwin();
+    printf("[DEBUG] %s():    Got mouse event at {x: %i, y: %i, z: %i}\n", __func__, mouse_event->x, mouse_event->y, mouse_event->z);
+    napms(20000);
+    refresh();
 }
 
 static const ToggleMenu_Conf TOGGLE_MENU_DEFAULT_CONF = {
@@ -430,6 +441,9 @@ static const ToggleMenu_Conf TOGGLE_MENU_DEFAULT_CONF = {
     .key_right = KEY_RIGHT,
     .key_down = KEY_DOWN,
     .key_left = KEY_LEFT,
+    .get_mouse_events = true,
+    .mouse_handler = &default_ToggleMenu_mousehandler__,
+    .mouse_events_mask = TOGGLEMENU_DEFAULT_MOUSEEVENTS_MASK,
 };
 
 ToggleMenu new_ToggleMenu(Toggle* toggles, int num_toggles)
@@ -542,6 +556,10 @@ void handle_ToggleMenu(ToggleMenu toggle_menu)
     set_menu_sub(nc_menu, derwin(menu_win, toggle_menu.height -1, toggle_menu.width -2, toggle_menu.start_y +1, toggle_menu.start_x+1)); //LINES/2) - 2, COLS / 2 - 2, 1, 1));
     set_menu_mark(nc_menu, "");
     if (toggle_menu.boxed) box(menu_win,0,0);
+    if (toggle_menu.get_mouse_events) {
+        mmask_t mouse_events_mask = toggle_menu.mouse_events_mask;
+        mousemask(mouse_events_mask, NULL);
+    }
     post_menu(nc_menu);
     wrefresh(menu_win);
 
@@ -567,7 +585,7 @@ void handle_ToggleMenu(ToggleMenu toggle_menu)
                     if (try_display_state) draw_ToggleMenu_states(state_win, toggle_menu);
                 }
             }
-        } else if ( c ==  toggle_menu.key_left) {
+        } else if ( c == toggle_menu.key_left) {
             // Cycle through states for selected item
             if (current_item(nc_menu)) {
                 Toggle *toggle = (Toggle *)item_userptr(current_item(nc_menu));
@@ -575,6 +593,18 @@ void handle_ToggleMenu(ToggleMenu toggle_menu)
                     cycle_toggle_state(toggle);
                     if (try_display_state) draw_ToggleMenu_states(state_win, toggle_menu);
                 }
+            }
+        } else if ( toggle_menu.get_mouse_events && (c == KEY_MOUSE) ) {
+            MEVENT mouse_event;
+            if (getmouse(&mouse_event) == OK) {
+                assert(toggle_menu.mouse_handler != NULL);
+                toggle_menu.mouse_handler(&mouse_event);
+            } else {
+                //TODO: handle this failure somehow
+                endwin();
+                fprintf(stderr,"\n[DEBUG] %s():    Failed getmouse().\n", __func__);
+                napms(2000);
+                refresh();
             }
         } else if ( c == '\n') {
             // Toggle state for selected BOOL_TOGGLE item
