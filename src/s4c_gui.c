@@ -424,12 +424,14 @@ ToggleMenu new_ToggleMenu_(Toggle* toggles, int num_toggles, ToggleMenu_Conf con
     };
 }
 
-void default_ToggleMenu_mousehandler__(MEVENT* mouse_event)
+void default_ToggleMenu_mousehandler__(ToggleMenu toggle_menu, MEVENT* mouse_event)
 {
-    endwin();
-    printf("[DEBUG] %s():    Got mouse event at {x: %i, y: %i, z: %i}\n", __func__, mouse_event->x, mouse_event->y, mouse_event->z);
-    napms(20000);
+    printw("[DEBUG] %s():    Got mouse event at {x: %i, y: %i, z: %i}\n", __func__, mouse_event->x, mouse_event->y, mouse_event->z);
+    printw("[DEBUG] %s():    Info on menu: {\n", __func__);
+    printw("[DEBUG]" ToggleMenu_Fmt "\n", ToggleMenu_Arg(toggle_menu));
+    printw("[DEBUG] }\n");
     refresh();
+    napms(20000);
 }
 
 static const ToggleMenu_Conf TOGGLE_MENU_DEFAULT_CONF = {
@@ -441,14 +443,25 @@ static const ToggleMenu_Conf TOGGLE_MENU_DEFAULT_CONF = {
     .key_right = KEY_RIGHT,
     .key_down = KEY_DOWN,
     .key_left = KEY_LEFT,
-    .get_mouse_events = true,
-    .mouse_handler = &default_ToggleMenu_mousehandler__,
-    .mouse_events_mask = TOGGLEMENU_DEFAULT_MOUSEEVENTS_MASK,
 };
 
 ToggleMenu new_ToggleMenu(Toggle* toggles, int num_toggles)
 {
     return new_ToggleMenu_(toggles, num_toggles, TOGGLE_MENU_DEFAULT_CONF);
+}
+
+ToggleMenu new_ToggleMenu_with_mouse_mask(Toggle* toggles, int num_toggles, ToggleMenu_MouseEvent_Handler* mouse_events_handler, mmask_t mouse_events_mask)
+{
+    ToggleMenu res = new_ToggleMenu_(toggles, num_toggles, TOGGLE_MENU_DEFAULT_CONF);
+    res.get_mouse_events = true;
+    res.mouse_handler = mouse_events_handler;
+    res.mouse_events_mask = mouse_events_mask;
+    return res;
+}
+
+ToggleMenu new_ToggleMenu_with_mouse(Toggle* toggles, int num_toggles, ToggleMenu_MouseEvent_Handler* mouse_events_handler)
+{
+    return new_ToggleMenu_with_mouse_mask(toggles, num_toggles, mouse_events_handler, TOGGLEMENU_DEFAULT_MOUSEEVENTS_MASK);
 }
 
 void free_ToggleMenu(ToggleMenu toggle_menu)
@@ -598,7 +611,7 @@ void handle_ToggleMenu(ToggleMenu toggle_menu)
             MEVENT mouse_event;
             if (getmouse(&mouse_event) == OK) {
                 assert(toggle_menu.mouse_handler != NULL);
-                toggle_menu.mouse_handler(&mouse_event);
+                toggle_menu.mouse_handler(toggle_menu, &mouse_event);
             } else {
                 //TODO: handle this failure somehow
                 endwin();

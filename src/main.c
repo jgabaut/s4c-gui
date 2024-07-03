@@ -97,7 +97,7 @@ int togglemenu_main(void)
         {TEXTFIELD_TOGGLE, (ToggleState){.txt_state = new_TextField(txt_max_size_2, height, width, start_y, start_x)}, "Name-> (U)", false},
     };
     int num_toggles = sizeof(toggles) / sizeof(toggles[0]);
-    ToggleMenu toggle_menu = new_ToggleMenu(toggles, num_toggles);
+    ToggleMenu toggle_menu = new_ToggleMenu_with_mouse(toggles, num_toggles, &default_ToggleMenu_mousehandler__);
     toggle_menu.statewin_height = LINES;
     toggle_menu.statewin_width = COLS/2;
     toggle_menu.statewin_start_x = COLS/2;
