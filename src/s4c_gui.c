@@ -431,7 +431,7 @@ void default_ToggleMenu_mousehandler__(ToggleMenu toggle_menu, MEVENT* mouse_eve
     printw("[DEBUG]" ToggleMenu_Fmt "\n", ToggleMenu_Arg(toggle_menu));
     printw("[DEBUG] }\n");
     refresh();
-    napms(20000);
+    napms(2000);
 }
 
 static const ToggleMenu_Conf TOGGLE_MENU_DEFAULT_CONF = {
@@ -610,8 +610,10 @@ void handle_ToggleMenu(ToggleMenu toggle_menu)
         } else if ( toggle_menu.get_mouse_events && (c == KEY_MOUSE) ) {
             MEVENT mouse_event;
             if (getmouse(&mouse_event) == OK) {
-                assert(toggle_menu.mouse_handler != NULL);
-                toggle_menu.mouse_handler(toggle_menu, &mouse_event);
+                if (wenclose(menu_win, mouse_event.y, mouse_event.x) == TRUE) {
+                    assert(toggle_menu.mouse_handler != NULL);
+                    toggle_menu.mouse_handler(toggle_menu, &mouse_event);
+                }
             } else {
                 //TODO: handle this failure somehow
                 endwin();
