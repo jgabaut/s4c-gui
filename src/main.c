@@ -66,7 +66,7 @@ const char* my_format(int val)
     }
 }
 
-int togglemenu_main(void)
+int togglemenu_main(size_t argc, char** argv)
 {
     // Initialize ncurses
     initscr();
@@ -97,7 +97,13 @@ int togglemenu_main(void)
         {TEXTFIELD_TOGGLE, (ToggleState){.txt_state = new_TextField(txt_max_size_2, height, width, start_y, start_x)}, "Name-> (U)", false},
     };
     int num_toggles = sizeof(toggles) / sizeof(toggles[0]);
-    ToggleMenu toggle_menu = new_ToggleMenu_with_mouse(toggles, num_toggles, &default_ToggleMenu_mousehandler__);
+    ToggleMenu toggle_menu = {0};
+
+    if (argc > 2) {
+        toggle_menu = new_ToggleMenu_with_mouse(toggles, num_toggles, &default_ToggleMenu_mousehandler__);
+    } else {
+        toggle_menu = new_ToggleMenu(toggles, num_toggles);
+    }
     toggle_menu.statewin_height = LINES;
     toggle_menu.statewin_width = COLS/2;
     toggle_menu.statewin_start_x = COLS/2;
@@ -116,7 +122,7 @@ int togglemenu_main(void)
 int main(int argc, char** argv)
 {
     if (argc > 1) {
-        return togglemenu_main();
+        return togglemenu_main(argc, argv);
     } else {
         return textfield_main();
     }
