@@ -157,7 +157,10 @@ typedef struct {
     ToggleMultiState_Formatter* multistate_formatter;
 } Toggle;
 
-typedef void(ToggleMenu_MouseEvent_Handler)(MEVENT* event);
+
+struct ToggleMenu;
+
+typedef void(ToggleMenu_MouseEvent_Handler)(struct ToggleMenu, MEVENT* event);
 
 
 // Reference: https://tldp.org/HOWTO/NCURSES-Programming-HOWTO/mouse.html
@@ -211,9 +214,15 @@ typedef struct ToggleMenu {
     ToggleMenu_MouseEvent_Handler* mouse_handler;
 } ToggleMenu;
 
-void ToggleMenu_default_mousehandler__(MEVENT* mouse_event);
+#define ToggleMenu_Fmt "ToggleMenu {\n  num_toggles: %i\n  height: %i\n  width: %i\n  start_x: %i\n  start_y: %i\n  boxed: %s\n  quit_key: %i\n  statewin_width: %i\n  statewin_height: %i\n  statewin_start_x: %i\n  statewin_start_y: %i\n  statewin_boxed: %s\n  statewin_label: %s\n  key_up: %i\n  key_right: %i\n  key_down: %i\n  key_left: %i\n  get_mouse_events: %s\n"
+
+#define ToggleMenu_Arg(tm) (tm).num_toggles, (tm).height, (tm).width, (tm).start_x, (tm).start_y, ((tm).boxed ? "true" : "false"), (tm).quit_key, (tm).statewin_width, (tm).statewin_height, (tm).statewin_start_x, (tm).statewin_start_y, ((tm).statewin_boxed ? "true" : "false"), ((tm).statewin_label != NULL ? (tm).statewin_label : "null"), (tm).key_up, (tm).key_right, (tm).key_down, (tm).key_left, ((tm).get_mouse_events ? "true" : "false")
+
+void default_ToggleMenu_mousehandler__(ToggleMenu toggle_menu, MEVENT* mouse_event);
 ToggleMenu new_ToggleMenu_(Toggle* toggles, int num_toggles, ToggleMenu_Conf conf);
 ToggleMenu new_ToggleMenu(Toggle* toggles, int num_toggles);
+ToggleMenu new_ToggleMenu_with_mouse_mask(Toggle* toggles, int num_toggles, ToggleMenu_MouseEvent_Handler* mouse_events_handler, mmask_t mouse_events_mask);
+ToggleMenu new_ToggleMenu_with_mouse(Toggle* toggles, int num_toggles, ToggleMenu_MouseEvent_Handler* mouse_events_handler);
 void draw_ToggleMenu_states(WINDOW *win, ToggleMenu toggle_menu);
 void handle_ToggleMenu(ToggleMenu toggle_menu);
 void free_ToggleMenu(ToggleMenu toggle_menu);
