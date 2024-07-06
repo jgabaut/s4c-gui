@@ -149,7 +149,7 @@ typedef union ToggleState {
     TextField txt_state; // For TEXTFIELD_TOGGLE
 } ToggleState;
 
-typedef struct {
+typedef struct Toggle {
     ToggleType type;
     ToggleState state;
     char *label;
