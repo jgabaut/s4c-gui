@@ -1,16 +1,6 @@
 # s4c-gui
 
+# Notice: This repo has been archived and its code will be further developed as a module for [sprites4curses](https://github.com/jgabaut/sprites4curses).
+
 A small collection of curses-based UI elements.
-
 Made for use with [sprites4curses](https://github.com/jgabaut/sprites4curses).
-
-This repo is still under construction.
-
-## Table of Contents
-
-+ [Prerequisites](#prerequisites)
-+ [Installation](#install)
-
-## Prerequisites <a name = "prerequisites"></a>
-
-## Installaton <a name = "install"></a>
