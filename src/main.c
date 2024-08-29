@@ -47,22 +47,22 @@ int textfield_main(void)
 const char* my_format(int val)
 {
     switch(val) {
-        case 0: {
-            return "zero";
-        }
-        break;
-        case 1: {
-            return "one";
-        }
-        break;
-        case 2: {
-            return "two";
-        }
-        break;
-        default: {
-            return "too high!";
-        }
-        break;
+    case 0: {
+        return "zero";
+    }
+    break;
+    case 1: {
+        return "one";
+    }
+    break;
+    case 2: {
+        return "two";
+    }
+    break;
+    default: {
+        return "too high!";
+    }
+    break;
     }
 }
 
